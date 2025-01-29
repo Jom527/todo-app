@@ -1,8 +1,14 @@
 // todos/todos.entity.ts
-import { IsString, IsOptional, IsEnum } from 'class-validator';
-import { Priority } from './enums/priority';
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Status } from './enums/status';
+import { IsString, IsOptional, IsEnum } from "class-validator";
+import { Priority } from "./enums/priority";
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { Status } from "./enums/status";
 
 @Entity()
 export class Todo {
@@ -19,7 +25,7 @@ export class Todo {
   description?: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: Priority,
     default: Priority.MEDIUM, // Default priority
   })
@@ -27,7 +33,7 @@ export class Todo {
   priority: Priority;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: Status,
     default: Status.TODO, // Default status
   })
@@ -35,7 +41,7 @@ export class Todo {
   status: Status;
 
   @CreateDateColumn()
-  createdAt: Date; 
+  createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
