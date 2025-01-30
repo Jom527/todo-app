@@ -19,7 +19,7 @@ import { TodosModule } from "./todos/todos.module";
         return {
           type: dbConfig.type,
           host: dbConfig.host,
-          port: dbConfig.port, //sample
+          port: dbConfig.port,
           username: dbConfig.username,
           password: dbConfig.password,
           database: dbConfig.database,
