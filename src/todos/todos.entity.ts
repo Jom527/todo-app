@@ -1,16 +1,16 @@
 // todos/todos.entity.ts
-import { IsString, IsOptional, IsEnum } from "class-validator";
-import { Priority } from "./enums/priority";
+import { IsEnum, IsOptional, IsString } from "class-validator";
 import {
   Column,
+  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Priority } from "./enums/priority";
 import { Status } from "./enums/status";
 
-@Entity()
+@Entity("users_tasks")
 export class Todo {
   @PrimaryGeneratedColumn()
   id: number;
