@@ -2,9 +2,9 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { TodosModule } from "./todos/todos.module";
-import { Todo } from "./todos/todos.entity";
 import appConfig from "./config/app.config";
+import { Todo } from "./todos/todos.entity";
+import { TodosModule } from "./todos/todos.module";
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import appConfig from "./config/app.config";
           password: dbConfig.password,
           database: dbConfig.database,
           entities: [Todo],
-          synchronize: process.env.NODE_ENV !== "production", // Disable synchronize in production
+          synchronize: process.env.NODE_ENV !== "production",
         };
       },
       inject: [ConfigService],
