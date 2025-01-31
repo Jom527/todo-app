@@ -7,6 +7,6 @@ export const isZeroOrNull = (value: number) => {
   return value == 0 || value == null ? true : false;
 };
 
-export const isScheduled = (value: string) => {
+export const isSchedule = (value: TaskType) => {
   return value == TaskType.Scheduled ? true : false;
 };

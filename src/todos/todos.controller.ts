@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
@@ -19,6 +20,8 @@ import {
   UpdateTaskTypeResponse,
 } from "./response/update";
 import { TaskType } from "./enums/taskType";
+import { GetCompletedTaskResponse } from "./response/get";
+import { UpdateTaskModalDto } from "./dto/update";
 
 @Controller("todos")
 export class TodosController {
@@ -37,9 +40,24 @@ export class TodosController {
     return this.todosService.findAll();
   }
 
+  @Get("completed")
+  async getAllCompletedTasks(
+    @Query("type") type: TaskType,
+  ): Promise<GetCompletedTaskResponse[]> {
+    const task = await this.todosService.getAllCompletedTask(type);
+    return task.length !== 0 ? task : [];
+  }
+
   @Get(":id")
   async findOne(@Param("id") id: number): Promise<Todo> {
     return this.todosService.findOne(id);
+  }
+
+  @Put()
+  async updateTaskModal(
+    @Body() updateTaskModalDto: UpdateTaskModalDto,
+  ): Promise<Todo> {
+    return this.todosService.updateModalTask(updateTaskModalDto);
   }
 
   @Put(":id")

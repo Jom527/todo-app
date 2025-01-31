@@ -15,9 +15,15 @@ import {
   UpdateStatusResponse,
   UpdateTaskTypeResponse,
 } from "./response/update";
-import { isEmpty, isScheduled, isZeroOrNull } from "src/utility/booleanChecker";
-import { UpdateTaskDto } from "./dto/update";
+import { isEmpty, isSchedule, isZeroOrNull } from "src/utility/booleanChecker";
+import {
+  UpdateTaskDto,
+  UpdateTaskModal,
+  UpdateTaskModalDto,
+} from "./dto/update";
 import { TaskType } from "./enums/taskType";
+import { GetCompletedTaskResponse } from "./response/get";
+import { effortBurnComputation } from "src/utility/dateTime";
 
 @Injectable()
 export class TodosService {
@@ -27,7 +33,13 @@ export class TodosService {
   ) {}
 
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const newTodo = this.todosRepository.create(createTodoDto);
+    const insertTask = new Todo();
+    insertTask.title = createTodoDto.title;
+    insertTask.description = createTodoDto.description;
+    insertTask.priority = createTodoDto.priority;
+    insertTask.status = createTodoDto.status;
+    insertTask.isScheduled = isSchedule(createTodoDto.category);
+    const newTodo = this.todosRepository.create(insertTask);
     return this.todosRepository.save(newTodo);
   }
 
@@ -51,10 +63,44 @@ export class TodosService {
     return todos;
   }
 
+  async getAllCompletedTask(
+    type: TaskType,
+  ): Promise<GetCompletedTaskResponse[]> {
+    if (isEmpty(type) || !Object.values(TaskType).includes(type)) {
+      throw new BadRequestException("Type is required or invalid");
+    }
+    const tasks = await this.todosRepository.find({
+      where: { status: Status.COMPLETED, isScheduled: isSchedule(type) },
+      order: { completedAt: "ASC" },
+    });
+    const filteredTask = tasks.map((item) => ({
+      ...item,
+      effortBurn: effortBurnComputation(item.createdAt, item.completedAt),
+    }));
+
+    return filteredTask;
+  }
+
   async update(id: number, updateTodoDto: UpdateTodoDto): Promise<Todo> {
     const todo = await this.findOne(id);
     await this.todosRepository.update(todo.id, updateTodoDto);
     return this.findOne(todo.id);
+  }
+
+  async updateModalTask(updateTaskDto: UpdateTaskModalDto): Promise<Todo> {
+    if (
+      isEmpty(updateTaskDto.category) ||
+      !Object.values(TaskType).includes(updateTaskDto.category)
+    ) {
+      throw new BadRequestException("Type is required or invalid");
+    }
+    const task = await this.findOne(updateTaskDto.id);
+    const updateTask = new UpdateTaskModal();
+    updateTask.title = updateTaskDto.title;
+    updateTask.description = updateTaskDto.description;
+    updateTask.isScheduled = isSchedule(updateTaskDto.category);
+    await this.todosRepository.update(task.id, updateTask);
+    return this.findOne(task.id);
   }
 
   async updateTaskByStatus(
@@ -117,7 +163,7 @@ export class TodosService {
     const task = await this.findOne(id);
     const updateTask = new UpdateTaskDto();
     updateTask.id = id;
-    updateTask.isScheduled = isScheduled(type);
+    updateTask.isScheduled = isSchedule(type);
     await this.todosRepository.update(task.id, updateTask);
     const data = await this.findOne(id);
     const response = new UpdateTaskTypeResponse();

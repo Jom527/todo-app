@@ -54,6 +54,7 @@ export class Todo {
 
   @Column({ type: "timestamp", nullable: true })
   completedAt: Date;
+
   setStatus(status: Status) {
     if (status === "completed") {
       return (this.completedAt = new Date());

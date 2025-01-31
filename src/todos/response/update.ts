@@ -15,3 +15,7 @@ export class UpdateTaskTypeResponse {
   id: number;
   isScheduled: boolean;
 }
+
+export class UpdateTaskModalResponse{
+  
+}
