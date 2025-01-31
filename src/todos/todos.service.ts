@@ -15,8 +15,7 @@ import {
   UpdateStatusResponse,
   UpdateTaskTypeResponse,
 } from "./response/update";
-import { isScheduled, isZeroOrNull } from "src/utility/booleanChecker";
-import { isEmpty } from "class-validator";
+import { isEmpty, isScheduled, isZeroOrNull } from "src/utility/booleanChecker";
 import { UpdateTaskDto } from "./dto/update";
 import { TaskType } from "./enums/taskType";
 
