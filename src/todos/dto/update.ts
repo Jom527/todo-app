@@ -23,6 +23,8 @@ export class UpdateTaskDto extends BaseDto {
   @IsOptional()
   @IsBoolean()
   isScheduled: boolean;
+  @IsOptional()
+  completedAt: Date;
 }
 
 export class UpdateTodoDto {

@@ -69,9 +69,11 @@ export class TodosService {
       throw new BadRequestException("Status is required or invalid");
     }
     const task = await this.findOne(id);
+    const completion = task.setStatus(status);
     const updateStatus = new UpdateTaskDto();
     updateStatus.id = id;
     updateStatus.status = status;
+    updateStatus.completedAt = completion;
     await this.todosRepository.update(task.id, updateStatus);
     const data = await this.findOne(id);
     const response = new UpdateStatusResponse();

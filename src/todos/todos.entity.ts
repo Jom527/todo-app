@@ -56,10 +56,9 @@ export class Todo {
   completedAt: Date;
   setStatus(status: Status) {
     if (status === "completed") {
-      this.completedAt = new Date();
+      return (this.completedAt = new Date());
     } else {
-      this.completedAt = null;
+      return (this.completedAt = null);
     }
   }
 }
-
