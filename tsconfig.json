@@ -19,10 +19,22 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@todo-app/utilities": [
-        "libs/utilities/src"
+        "libs/utilities/"
       ],
       "@todo-app/utilities/*": [
-        "libs/utilities/src/*"
+        "libs/utilities/*"
+      ],
+      "@todo-app/constants": [
+        "libs/constants/"
+      ],
+      "@todo-app/constants/*": [
+        "libs/constants/*"
+      ],
+      "@todo-app/common": [
+        "libs/common/src"
+      ],
+      "@todo-app/common/*": [
+        "libs/common/src/*"
       ]
     }
   }
