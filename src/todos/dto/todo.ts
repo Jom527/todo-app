@@ -20,17 +20,14 @@ export class CreateTodoDto {
 
   @IsOptional()
   @IsEnum(Priority)
-  priority?: Priority = Priority.LOW;
+  priority?: Priority = Priority.HIGH;
 
   @IsOptional()
   @IsEnum(Status)
   status?: Status = Status.TODO;
 }
 
-
-
 export class DeleteTodoDto {
   @IsNumber()
   id: number;
 }
-

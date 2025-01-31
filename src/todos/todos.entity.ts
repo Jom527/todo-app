@@ -27,7 +27,7 @@ export class Todo {
   @Column({
     type: "enum",
     enum: Priority,
-    default: Priority.MEDIUM, // Default priority
+    default: Priority.HIGH, // Default priority
   })
   @IsEnum(Priority)
   priority: Priority;
