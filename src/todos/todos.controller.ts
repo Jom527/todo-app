@@ -33,6 +33,11 @@ export class TodosController {
   }
 
   @Get()
+  async getAllTask(): Promise<Todo[]> {
+    return this.todosService.getAllTask();
+  }
+
+  @Get()
   async findAll(@Query("priority") priority?: Priority): Promise<Todo[]> {
     if (priority) {
       return this.todosService.getFilteredTodos(priority);

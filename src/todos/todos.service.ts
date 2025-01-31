@@ -55,6 +55,13 @@ export class TodosService {
     return todo;
   }
 
+  async getAllTask(): Promise<Todo[]> {
+    const tasks = await this.todosRepository.find({
+      order: { priority: "ASC", createdAt: "ASC" },
+    });
+    return tasks;
+  }
+
   async getFilteredTodos(priority: Priority): Promise<Todo[]> {
     const todos = await this.todosRepository.find({
       where: { priority },
