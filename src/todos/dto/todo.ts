@@ -20,7 +20,7 @@ export class CreateTodoDto {
 
   @IsOptional()
   @IsEnum(Priority)
-  priority?: Priority = Priority.MEDIUM;
+  priority?: Priority = Priority.HIGH;
 
   @IsOptional()
   @IsEnum(Status)
