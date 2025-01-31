@@ -64,6 +64,7 @@ export class TodosService {
     if (isZeroOrNull(id)) {
       throw new BadRequestException("ID is required");
     }
+
     if (isEmpty(status) || !Object.values(Status).includes(status)) {
       throw new BadRequestException("Status is required or invalid");
     }
