@@ -12,6 +12,13 @@ import { CreateTodoDto, UpdateTodoDto } from "./dto";
 import { Priority } from "./enums/priority";
 import { Todo } from "./todos.entity";
 import { TodosService } from "./todos.service";
+import { Status } from "./enums/status";
+import {
+  UpdatePriorityResponse,
+  UpdateStatusResponse,
+  UpdateTaskTypeResponse,
+} from "./response/update";
+import { TaskType } from "./enums/taskType";
 
 @Controller("todos")
 export class TodosController {
@@ -41,6 +48,30 @@ export class TodosController {
     @Body() updateTodoDto: UpdateTodoDto,
   ): Promise<Todo> {
     return this.todosService.update(id, updateTodoDto);
+  }
+
+  @Put(":id/status=:status")
+  async updateTaskByStatus(
+    @Param("id") id: number,
+    @Param("status") status: Status,
+  ): Promise<UpdateStatusResponse> {
+    return this.todosService.updateTaskByStatus(id, status);
+  }
+
+  @Put(":id/priority=:priority")
+  async updateTaskByPriority(
+    @Param("id") id: number,
+    @Param("priority") priority: Priority,
+  ): Promise<UpdatePriorityResponse> {
+    return this.todosService.updateTaskByPrioriy(id, priority);
+  }
+
+  @Put(":id/type=:type")
+  async updateTaskByType(
+    @Param("id") id: number,
+    @Param("type") type: TaskType,
+  ): Promise<UpdateTaskTypeResponse> {
+    return this.todosService.updateTaskByType(id, type);
   }
 
   @Delete(":id")
