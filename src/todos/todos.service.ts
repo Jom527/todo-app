@@ -5,19 +5,23 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import {
+  isEmpty,
+  isScheduled,
+  isZeroOrNull,
+} from "@todo-app/utilities/booleanChecker";
 import { Repository } from "typeorm";
-import { Todo } from "./todos.entity";
 import { CreateTodoDto, UpdateTodoDto } from "./dto";
+import { UpdateTaskDto } from "./dto/update";
 import { Priority } from "./enums/priority";
 import { Status } from "./enums/status";
+import { TaskType } from "./enums/taskType";
 import {
   UpdatePriorityResponse,
   UpdateStatusResponse,
   UpdateTaskTypeResponse,
 } from "./response/update";
-import { isEmpty, isScheduled, isZeroOrNull } from "src/utility/booleanChecker";
-import { UpdateTaskDto } from "./dto/update";
-import { TaskType } from "./enums/taskType";
+import { Todo } from "./todos.entity";
 
 @Injectable()
 export class TodosService {
