@@ -1,5 +1,5 @@
 // todos/todos.entity.ts
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
 import {
   Column,
   CreateDateColumn,
@@ -27,7 +27,7 @@ export class Todo {
   @Column({
     type: "enum",
     enum: Priority,
-    default: Priority.HIGH, // Default priority
+    default: Priority.MEDIUM, // Default priority
   })
   @IsEnum(Priority)
   priority: Priority;
@@ -40,9 +40,25 @@ export class Todo {
   @IsEnum(Status)
   status: Status;
 
+  @Column({
+    type: "boolean",
+    default: true,
+  })
+  isScheduled: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ type: "timestamp", nullable: true })
+  completedAt: Date;
+  setStatus(status: Status) {
+    if (status === "completed") {
+      return (this.completedAt = new Date());
+    } else {
+      return (this.completedAt = null);
+    }
+  }
 }
