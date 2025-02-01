@@ -8,17 +8,16 @@ import {
   Put,
   Query,
 } from "@nestjs/common";
-import { CreateTodoDto, UpdateTodoDto } from "./dto";
-import { Priority } from "./enums/priority";
+import { CreateTodoDto, UpdateTodoDto, UpdateTaskModalDto } from "./dto";
+import { Priority, Status, TaskType } from "./enums";
 import { Todo } from "./todos.entity";
 import { TodosService } from "./todos.service";
-import { Status } from "./enums/status";
 import {
   UpdatePriorityResponse,
   UpdateStatusResponse,
   UpdateTaskTypeResponse,
-} from "./response/update";
-import { TaskType } from "./enums/taskType";
+  GetCompletedTaskResponse,
+} from "@todo-app/interfaces";
 
 @Controller("todos")
 export class TodosController {
@@ -30,6 +29,11 @@ export class TodosController {
   }
 
   @Get()
+  async getAllTask(): Promise<Todo[]> {
+    return this.todosService.getAllTask();
+  }
+
+  @Get()
   async findAll(@Query("priority") priority?: Priority): Promise<Todo[]> {
     if (priority) {
       return this.todosService.getFilteredTodos(priority);
@@ -37,9 +41,23 @@ export class TodosController {
     return this.todosService.findAll();
   }
 
+  @Get("completed")
+  async getAllCompletedTasks(
+  ): Promise<GetCompletedTaskResponse[]> {
+    const task = await this.todosService.getAllCompletedTask();
+    return task.length !== 0 ? task : [];
+  }
+
   @Get(":id")
   async findOne(@Param("id") id: number): Promise<Todo> {
     return this.todosService.findOne(id);
+  }
+
+  @Put()
+  async updateTaskModal(
+    @Body() updateTaskModalDto: UpdateTaskModalDto,
+  ): Promise<Todo> {
+    return this.todosService.updateModalTask(updateTaskModalDto);
   }
 
   @Put(":id")

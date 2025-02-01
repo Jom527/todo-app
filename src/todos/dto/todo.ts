@@ -8,6 +8,7 @@ import {
 } from "class-validator";
 import { Priority } from "../enums/priority";
 import { Status } from "../enums/status";
+import { TaskType } from "../enums/taskType";
 
 export class CreateTodoDto {
   @IsString()
@@ -25,6 +26,10 @@ export class CreateTodoDto {
   @IsOptional()
   @IsEnum(Status)
   status?: Status = Status.TODO;
+
+  @IsOptional()
+  @IsEnum(TaskType)
+  category?: TaskType = TaskType.Scheduled;
 }
 
 export class UpdateTodoDto {
