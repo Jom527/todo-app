@@ -7,8 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Priority } from "./enums/priority";
-import { Status } from "./enums/status";
+import { Priority, Status } from "./enums";
 
 @Entity("users_tasks")
 export class Todo {

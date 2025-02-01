@@ -9,18 +9,23 @@ import {
   isEmpty,
   isScheduled,
   isZeroOrNull,
-} from "@todo-app/utilities/booleanChecker";
+  effortBurnComputation,
+} from "@todo-app/utilities";
 import { Repository } from "typeorm";
-import { CreateTodoDto, UpdateTodoDto } from "./dto";
-import { UpdateTaskDto } from "./dto/update";
-import { Priority } from "./enums/priority";
-import { Status } from "./enums/status";
-import { TaskType } from "./enums/taskType";
+import {
+  CreateTodoDto,
+  UpdateTodoDto,
+  UpdateTaskDto,
+  UpdateTaskModal,
+  UpdateTaskModalDto,
+} from "./dto";
+import { Priority, Status, TaskType } from "./enums";
 import {
   UpdatePriorityResponse,
   UpdateStatusResponse,
   UpdateTaskTypeResponse,
-} from "./response/update";
+  GetCompletedTaskResponse,
+} from "@todo-app/interfaces";
 import { Todo } from "./todos.entity";
 
 @Injectable()
@@ -31,7 +36,13 @@ export class TodosService {
   ) {}
 
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const newTodo = this.todosRepository.create(createTodoDto);
+    const insertTask = new Todo();
+    insertTask.title = createTodoDto.title;
+    insertTask.description = createTodoDto.description;
+    insertTask.priority = createTodoDto.priority;
+    insertTask.status = createTodoDto.status;
+    insertTask.isScheduled = isScheduled(createTodoDto.category);
+    const newTodo = this.todosRepository.create(insertTask);
     return this.todosRepository.save(newTodo);
   }
 
@@ -47,6 +58,13 @@ export class TodosService {
     return todo;
   }
 
+  async getAllTask(): Promise<Todo[]> {
+    const tasks = await this.todosRepository.find({
+      order: { priority: "ASC", createdAt: "ASC" },
+    });
+    return tasks;
+  }
+
   async getFilteredTodos(priority: Priority): Promise<Todo[]> {
     const todos = await this.todosRepository.find({
       where: { priority },
@@ -55,10 +73,44 @@ export class TodosService {
     return todos;
   }
 
+  async getAllCompletedTask(
+    type: TaskType,
+  ): Promise<GetCompletedTaskResponse[]> {
+    if (isEmpty(type) || !Object.values(TaskType).includes(type)) {
+      throw new BadRequestException("Type is required or invalid");
+    }
+    const tasks = await this.todosRepository.find({
+      where: { status: Status.COMPLETED, isScheduled: isScheduled(type) },
+      order: { completedAt: "ASC" },
+    });
+    const filteredTask = tasks.map((item) => ({
+      ...item,
+      effortBurn: effortBurnComputation(item.createdAt, item.completedAt),
+    }));
+
+    return filteredTask;
+  }
+
   async update(id: number, updateTodoDto: UpdateTodoDto): Promise<Todo> {
     const todo = await this.findOne(id);
     await this.todosRepository.update(todo.id, updateTodoDto);
     return this.findOne(todo.id);
+  }
+
+  async updateModalTask(updateTaskDto: UpdateTaskModalDto): Promise<Todo> {
+    if (
+      isEmpty(updateTaskDto.category) ||
+      !Object.values(TaskType).includes(updateTaskDto.category)
+    ) {
+      throw new BadRequestException("Type is required or invalid");
+    }
+    const task = await this.findOne(updateTaskDto.id);
+    const updateTask = new UpdateTaskModal();
+    updateTask.title = updateTaskDto.title;
+    updateTask.description = updateTaskDto.description;
+    updateTask.isScheduled = isScheduled(updateTaskDto.category);
+    await this.todosRepository.update(task.id, updateTask);
+    return this.findOne(task.id);
   }
 
   async updateTaskByStatus(
@@ -80,7 +132,7 @@ export class TodosService {
     updateStatus.completedAt = completion;
     await this.todosRepository.update(task.id, updateStatus);
     const data = await this.findOne(id);
-    const response = new UpdateStatusResponse();
+    const response = {} as UpdateStatusResponse;
     response.id = data.id;
     response.status = data.status;
     return response;
@@ -102,7 +154,7 @@ export class TodosService {
     updatePriority.priority = priority;
     await this.todosRepository.update(task.id, updatePriority);
     const data = await this.findOne(id);
-    const response = new UpdatePriorityResponse();
+    const response = {} as UpdatePriorityResponse;
     response.id = data.id;
     response.priority = data.priority;
     return response;
@@ -124,7 +176,7 @@ export class TodosService {
     updateTask.isScheduled = isScheduled(type);
     await this.todosRepository.update(task.id, updateTask);
     const data = await this.findOne(id);
-    const response = new UpdateTaskTypeResponse();
+    const response = {} as UpdateTaskTypeResponse;
     response.id = data.id;
     response.isScheduled = data.isScheduled;
     return response;
