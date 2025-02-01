@@ -43,9 +43,8 @@ export class TodosController {
 
   @Get("completed")
   async getAllCompletedTasks(
-    @Query("type") type: TaskType,
   ): Promise<GetCompletedTaskResponse[]> {
-    const task = await this.todosService.getAllCompletedTask(type);
+    const task = await this.todosService.getAllCompletedTask();
     return task.length !== 0 ? task : [];
   }
 

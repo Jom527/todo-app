@@ -73,14 +73,9 @@ export class TodosService {
     return todos;
   }
 
-  async getAllCompletedTask(
-    type: TaskType,
-  ): Promise<GetCompletedTaskResponse[]> {
-    if (isEmpty(type) || !Object.values(TaskType).includes(type)) {
-      throw new BadRequestException("Type is required or invalid");
-    }
+  async getAllCompletedTask(): Promise<GetCompletedTaskResponse[]> {
     const tasks = await this.todosRepository.find({
-      where: { status: Status.COMPLETED, isScheduled: isScheduled(type) },
+      where: { status: Status.COMPLETED },
       order: { completedAt: "ASC" },
     });
     const filteredTask = tasks.map((item) => ({
