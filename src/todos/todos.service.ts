@@ -6,26 +6,26 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
+  GetCompletedTaskResponse,
+  UpdatePriorityResponse,
+  UpdateStatusResponse,
+  UpdateTaskTypeResponse,
+} from "@todo-app/interfaces";
+import {
+  effortBurnComputation,
   isEmpty,
   isScheduled,
   isZeroOrNull,
-  effortBurnComputation,
 } from "@todo-app/utilities";
 import { Repository } from "typeorm";
 import {
   CreateTodoDto,
-  UpdateTodoDto,
   UpdateTaskDto,
   UpdateTaskModal,
   UpdateTaskModalDto,
+  UpdateTodoDto,
 } from "./dto";
 import { Priority, Status, TaskType } from "./enums";
-import {
-  UpdatePriorityResponse,
-  UpdateStatusResponse,
-  UpdateTaskTypeResponse,
-  GetCompletedTaskResponse,
-} from "@todo-app/interfaces";
 import { Todo } from "./todos.entity";
 
 @Injectable()
@@ -36,18 +36,12 @@ export class TodosService {
   ) {}
 
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const insertTask = new Todo();
-    insertTask.title = createTodoDto.title;
-    insertTask.description = createTodoDto.description;
-    insertTask.priority = createTodoDto.priority;
-    insertTask.status = createTodoDto.status;
-    insertTask.isScheduled = isScheduled(createTodoDto.category);
-    const newTodo = this.todosRepository.create(insertTask);
-    return this.todosRepository.save(newTodo);
+    const newTodo = await this.todosRepository.create(createTodoDto);
+    return await this.todosRepository.save(newTodo);
   }
 
   async findAll(): Promise<Todo[]> {
-    return this.todosRepository.find();
+    return await this.todosRepository.find();
   }
 
   async findOne(id: number): Promise<Todo> {
