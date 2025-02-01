@@ -54,10 +54,7 @@ export class UpdateTodoDto extends BaseDto {
   @IsOptional()
   @IsEnum(TaskType)
   category?: TaskType;
-}
 
-export class DeleteTodoDto extends BaseDto {}
-export class TodoDto extends UpdateTodoDto {
-  createdAt: Date;
-  updatedAt: Date;
+  @IsOptional()
+  completedAt?: Date;
 }

@@ -1,4 +1,3 @@
-// todos/todos.entity.ts
 import { IsEnum, IsOptional, IsString } from "class-validator";
 import {
   Column,
