@@ -22,11 +22,8 @@
       "@todo-app/utilities/*": ["libs/utilities/*"],
       "@todo-app/constants": ["libs/constants/"],
       "@todo-app/constants/*": ["libs/constants/*"],
-      "@todo-app/common": ["libs/common/src"],
-      "@todo-app/common/*": ["libs/common/src/*"],
       "@todo-app/interfaces": ["libs/interfaces"],
       "@todo-app/interfaces/*": ["libs/interfaces/*"]
     }
   }
-  
 }
