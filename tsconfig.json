@@ -28,4 +28,5 @@
       "@todo-app/interfaces/*": ["libs/interfaces/*"]
     }
   }
+  
 }
